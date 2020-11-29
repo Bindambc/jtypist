@@ -21,154 +21,80 @@ public class App {
 
 		if (args.length == 2) {
 			Path p = Paths.get(args[0]);
+			int timeExec = Integer.valueOf(args[1]);
 			try {
 
 				List<String> linhasArquivo = Files.readAllLines(p);
+				Robot robot = null;
+				try {
+					robot = new Robot();
+				} catch (AWTException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				// total time (estimated)
+
+				Double totalTime = (double) ((((Files.size(p) / 8) * timeExec) / 60) / 60);
+
+				System.out.println("\n=> Estimated time: " + totalTime + " minutes.");
+
+				robot.delay(10000);
 
 				for (String linha : linhasArquivo) {
-					System.out.println(linha);
 
-					try {
-						Robot robot = new Robot();
+					Character y;
 
-						robot.delay(10000);
+					for (int i = 0; i < linha.length(); i++) {
+						y = linha.charAt(i);
 
-						/*
-						 * for (byte b : linha.getBytes()) { int code = b; // keycode only handles [A-Z] (which is ASCII
-						 * decimal [65-90]) if (code > 96 && code < 123) code = code - 32; robot.delay(500);
-						 * System.err.println(code); robot.keyPress(code); robot.keyRelease(code); }
-						 */
-						
-						int x;
-						Character y;
+						switch (y) {
 
-						for (int i = 0; i < linha.length(); i++) {
-							y = linha.charAt(i);
-							System.out.println(y);
-							// x = Character.getNumericValue(y);
+						case '\t':
+							doType(robot, KeyEvent.VK_TAB);
+							break;
+						case '\n':
+							doType(robot, KeyEvent.VK_ENTER);
+							break;
+						case ' ':
+							doType(robot, KeyEvent.VK_SPACE);
+							break;
+						case '\b':
+							doType(robot, KeyEvent.VK_BACK_SPACE);
+							break;
+						case '_':
+							System.out.println("underscore");
+							doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_MINUS);
+							break;
+
+						default:
+
 							if (Character.isUnicodeIdentifierPart(y)) {
+								System.out.println("unicode");
+
+								if (Character.isUpperCase(y)) {
+									robot.keyPress(KeyEvent.VK_CAPS_LOCK);
+									robot.keyRelease(KeyEvent.VK_CAPS_LOCK);
+								}
+
 								robot.keyPress(KeyEvent.getExtendedKeyCodeForChar(y));
 								robot.keyRelease(KeyEvent.getExtendedKeyCodeForChar(y));
-								robot.delay(250);
-							} else {
-								switch (y) {
-								case '-':
-									doType(robot, KeyEvent.VK_MINUS);
-									break;
-								case '=':
-									doType(robot, KeyEvent.VK_EQUALS);
-									break;
-								case '~':
-									doType(robot, KeyEvent.VK_BACK_QUOTE);
-									break;
-								case '!':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_1);
-									break;
-								case '@':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_AT);
-									break;
-								case '#':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_NUMBER_SIGN);
-									break;
-								case '$':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_DOLLAR);
-									break;
-								case '%':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_5);
-									break;
-								case '^':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_CIRCUMFLEX);
-									break;
-								case '&':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_AMPERSAND);
-									break;
-								case '*':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_ASTERISK);
-									break;
-								case '(':
-									doType(robot, KeyEvent.VK_LEFT_PARENTHESIS);
-									break;
-								case ')':
-									doType(robot, KeyEvent.VK_RIGHT_PARENTHESIS);
-									break;
-								case '_':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_UNDERSCORE);
-									break;
-								case '+':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_PLUS);
-									break;
-								case '\t':
-									doType(robot, KeyEvent.VK_TAB);
-									break;
-								case '\n':
-									doType(robot, KeyEvent.VK_ENTER);
-									break;
-								case '[':
-									doType(robot, KeyEvent.VK_OPEN_BRACKET);
-									break;
-								case ']':
-									doType(robot, KeyEvent.VK_CLOSE_BRACKET);
-									break;
-								case '\\':
-									doType(robot, KeyEvent.VK_BACK_SLASH);
-									break;
-								case '{':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_OPEN_BRACKET);
-									break;
-								case '}':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_CLOSE_BRACKET);
-									break;
-								case '|':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_BACK_SLASH);
-									break;
-								case ';':
-									doType(robot, KeyEvent.VK_SEMICOLON);
-									break;
-								case ':':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_SEMICOLON);
-									break;
-								case '\'':
-									doType(robot, KeyEvent.VK_QUOTE);
-									break;
-								case '"':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_QUOTE);
-									break;
-								case ',':
-									doType(robot, KeyEvent.VK_COMMA);
-									break;
-								case '<':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_COMMA);
-									break;
-								case '.':
-									doType(robot, KeyEvent.VK_PERIOD);
-									break;
-								case '>':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_PERIOD);
-									break;
-								case '/':
-									doType(robot, KeyEvent.VK_SLASH);
-									break;
-								case '?':
-									doType(robot, KeyEvent.VK_SHIFT, KeyEvent.VK_SLASH);
-									break;
-								case ' ':
-									doType(robot, KeyEvent.VK_SPACE);
-									break;
-								case '\b':
-									doType(robot, KeyEvent.VK_BACK_SPACE);
-									break;
-								default:
-									robot.delay(250);
+
+								if (Character.isUpperCase(y)) {
+									robot.keyPress(KeyEvent.VK_CAPS_LOCK);
+									robot.keyRelease(KeyEvent.VK_CAPS_LOCK);
 								}
-								robot.delay(250);
+
+							} else {
+								doSpecialType(y);
 							}
+
 						}
 
-					} catch (AWTException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						robot.delay(timeExec);
 					}
-
+					doType(robot, KeyEvent.VK_ENTER);
+					robot.delay(1500);
 				}
 
 			} catch (FileNotFoundException e) {
@@ -191,19 +117,89 @@ public class App {
 
 	}
 
+	// apertar alt
+	// pegar os caracteres e convertelos em string
+	// rodar for para cada caractere da string, apertando o numero no teclado
+
+	private static void doSpecialType(Character ch) {
+		System.out.println("special");
+
+		String hash = String.valueOf(ch.hashCode());
+
+		try {
+			Robot robot = new Robot();
+
+			// press alt
+			robot.keyPress(KeyEvent.VK_ALT);
+			for (int i = 0; i < hash.length(); i++) {
+
+				switch (hash.charAt(i)) {
+				case '0':
+					robot.keyPress(KeyEvent.VK_NUMPAD0);
+					robot.keyRelease(KeyEvent.VK_NUMPAD0);
+					break;
+				case '1':
+					robot.keyPress(KeyEvent.VK_NUMPAD1);
+					robot.keyRelease(KeyEvent.VK_NUMPAD1);
+					break;
+				case '2':
+					robot.keyPress(KeyEvent.VK_NUMPAD2);
+					robot.keyRelease(KeyEvent.VK_NUMPAD2);
+					break;
+				case '3':
+					robot.keyPress(KeyEvent.VK_NUMPAD3);
+					robot.keyRelease(KeyEvent.VK_NUMPAD3);
+					break;
+				case '4':
+					robot.keyPress(KeyEvent.VK_NUMPAD4);
+					robot.keyRelease(KeyEvent.VK_NUMPAD4);
+					break;
+				case '5':
+					robot.keyPress(KeyEvent.VK_NUMPAD5);
+					robot.keyRelease(KeyEvent.VK_NUMPAD5);
+					break;
+				case '6':
+					robot.keyPress(KeyEvent.VK_NUMPAD6);
+					robot.keyRelease(KeyEvent.VK_NUMPAD6);
+					break;
+				case '7':
+					robot.keyPress(KeyEvent.VK_NUMPAD7);
+					robot.keyRelease(KeyEvent.VK_NUMPAD7);
+					break;
+				case '8':
+					robot.keyPress(KeyEvent.VK_NUMPAD8);
+					robot.keyRelease(KeyEvent.VK_NUMPAD8);
+					break;
+				case '9':
+					robot.keyPress(KeyEvent.VK_NUMPAD9);
+					robot.keyRelease(KeyEvent.VK_NUMPAD9);
+					break;
+
+				}
+
+			}
+			// release alt
+			robot.keyRelease(KeyEvent.VK_ALT);
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	private static void buildHelpMessage() {
 		System.out.println("\n\n");
 
 		System.out.println("Usage:\n");
 		System.out.println("java -jar jtypist {\"file name\"}  {kpm}\n\n");
 		System.out.println("- file name: a file that will be read");
-		System.out.println("- kpm: integer number - key per minute (100 is good)\n\n");
+		System.out.println("- value: time interval between each key - milliseconds (100 is good)\n\n");
 		// System.out.println("-f: a file that will be read");
 		// System.out.println("-t: key per minute (100 is good)\n\n");
 
 		System.out.println("Example:\n");
 
-		System.out.println("java -jar jtypist \"file.txt\"  100\n\n");
+		System.out.println("java -jar jtypist \"file.txt\"  230\n\n");
 
 	}
 
